@@ -21,23 +21,35 @@ from pywurfl import DeviceNotFound
 
 from mobile.sniffer import base
 
+from django.core.cache import cache
+
+global_devices = None
+
 class WurlfSniffer(base.Sniffer):
     """
 
     Native Wurlf capabilities are listed here: http://wurfl.sourceforge.net/help_doc.php
     """
-
+    
     def __init__(self, database_file=None, accuracy_threshold=0.5):
         """
 
         @param database_file: Path to Wurlf XML file or None to use internal database
         """
-
+        global global_devices
+        
         if database_file is None:
             # Import devices from the internal database shipped
             # with the source code
-            from wurfl import devices
-            self.devices = devices
+            #self.devices = cache.get('mobile.sniffer.wurfl.devices')
+            if not global_devices:
+                from wurfl import devices
+                self.devices = devices
+                global_devices = self.devices
+                #print 'Caching'
+                #cache.set('mobile.sniffer.wurfl.devices', self.devices, 72000)
+            else:
+                self.devices = global_devices
         else:
             raise NotImplementedError("TODO")
 
