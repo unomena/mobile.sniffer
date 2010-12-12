@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.9.3'
+version = '0.9.3.unomena.1'
 
 setup(name='mobile.sniffer',
       version=version,
